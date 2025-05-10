@@ -34,7 +34,7 @@ form.addEventListener("login", function (event) {
     const email = document.getElementById('loginemail').value;
     const password = document.getElementById('loginpassword').value;
 
-    alert(5)
+    //alert(5)
     if (!email || !password) {
         alert("Please enter both email and password.");
         return;
