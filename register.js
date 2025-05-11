@@ -53,7 +53,10 @@ form.addEventListener("submit", function (event) {
     .catch((error) => {
     const errorCode = error.code;
     const errorMessage = error.message;
-    alert(errorMessage)
-    // ..
+    if (errorCode === "auth/invalid-email") {
+          alert("Invalid email format");
+        } else {
+          alert(errorMessage);
+        }
     });
 })
