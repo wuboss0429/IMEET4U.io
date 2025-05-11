@@ -38,6 +38,15 @@ document.addEventListener("DOMContentLoaded", () => {
       alert("Password must be at least 6 characters long.");
       return;
     }
+
+    // 檢查電子郵件是否已註冊
+    fetchSignInMethodsForEmail(auth, email)
+      .then((signInMethods) => {
+        if (signInMethods.length === 0) {
+          alert("電子郵件未註冊");
+          return;
+        }
+        
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
