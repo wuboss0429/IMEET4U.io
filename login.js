@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
   form.addEventListener("submit", function (event) {
     event.preventDefault();
 
-    let email = document.getElementById('loginemail').value.trim().toLowerCase(); // 轉為小寫並移除空格
+    let email = document.getElementById('loginemail').value.trim().toLowerCase();
     const password = document.getElementById('loginpassword').value;
 
     if (!email || !password) {
@@ -41,12 +41,11 @@ document.addEventListener("DOMContentLoaded", () => {
     // 檢查電子郵件是否已註冊
     fetchSignInMethodsForEmail(auth, email)
       .then((signInMethods) => {
-        console.log("Sign-in methods:", signInMethods); // 診斷用
-        if (signInMethods.length === 0) {
+        console.log("Sign-in methods:", signInMethods);
+        if (!signInMethods || signInMethods.length === 0) {
           alert("Email Not Registered");
           return Promise.reject(new Error("Email Not Registered"));
         }
-        // 如果已註冊，嘗試登入
         return signInWithEmailAndPassword(auth, email, password)
           .then((userCredential) => {
             const user = userCredential.user;
@@ -65,7 +64,8 @@ document.addEventListener("DOMContentLoaded", () => {
       })
       .catch((error) => {
         if (error.message !== "Email Not Registered") {
-          console.error("Unexpected error:", error);
+          console.error("Fetch sign-in methods error:", error);
+          alert("An error occurred. Please try again.");
         }
       });
   });
