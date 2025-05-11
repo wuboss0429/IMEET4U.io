@@ -29,24 +29,32 @@ document.addEventListener("DOMContentLoaded", () => {
     const email = document.getElementById('loginemail').value;
     const password = document.getElementById('loginpassword').value;
 
-    alert(5); // 測試事件是否觸發
+    //alert(5); // 測試事件是否觸發
     if (!email || !password) {
-      alert("請輸入電子郵件和密碼");
+      alert("Please enter both email and password.");
       return;
     }
     if (password.length < 6) {
-      alert("密碼需至少 6 個字元");
+      alert("Password must be at least 6 characters long.");
       return;
     }
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
-        alert("登入成功！");
+        alert("login account.");
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        alert("錯誤：" + errorMessage);
+        if (errorCode === "auth/wrong-password") {
+          alert("Wrong password");
+        } else if (errorCode === "auth/user-not-found") {
+          alert("Email Not Registered");
+        } else if (errorCode === "auth/invalid-email") {
+          alert("Invalid email format");
+        } else {
+          alert(errorMessage);
+        }
       });
   });
 });
