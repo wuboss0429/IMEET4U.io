@@ -28,6 +28,10 @@ console.log("Auth instance:", auth); // 確認 auth 是否正確
 
 //submit
 const form = document.getElementById('login-form');
+if (!form) {
+    console.error("Login form not found");
+    return;
+  }
 form.addEventListener("submit", function (event) {
     event.preventDefault();
     //input
