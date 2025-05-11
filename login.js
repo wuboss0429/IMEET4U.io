@@ -46,12 +46,12 @@ document.addEventListener("DOMContentLoaded", () => {
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        if (errorCode === "auth/wrong-password") {
-          alert("Wrong password");
-        } else if (errorCode === "auth/user-not-found") {
-          alert("Email Not Registered");
-        } else if (errorCode === "auth/invalid-email") {
-          alert("Invalid email format");
+        if (errorCode === "auth/invalid-credential") {
+          if (password) {
+            alert("Wrong password");
+          } else {
+            alert("Email Not Registered");
+          }
         } else {
           alert(errorMessage);
         }
