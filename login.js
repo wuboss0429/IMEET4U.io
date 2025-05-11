@@ -38,14 +38,16 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // 檢查電子郵件是否已註冊
+    console.log("Attempting login with email:", email); // 診斷用
     fetchSignInMethodsForEmail(auth, email)
       .then((signInMethods) => {
-        console.log("Sign-in methods:", signInMethods);
+        console.log("Sign-in methods:", signInMethods); // 診斷用
         if (!signInMethods || signInMethods.length === 0) {
+          console.log("No sign-in methods found for email:", email); // 診斷用
           alert("Email Not Registered");
           return Promise.reject(new Error("Email Not Registered"));
         }
+        console.log("Proceeding with sign-in for email:", email); // 診斷用
         return signInWithEmailAndPassword(auth, email, password)
           .then((userCredential) => {
             const user = userCredential.user;
@@ -54,6 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
           .catch((error) => {
             const errorCode = error.code;
             const errorMessage = error.message;
+            console.log("Sign-in error:", error); // 診斷用
             if (errorCode === "auth/invalid-credential" || errorCode === "auth/wrong-password") {
               alert("Wrong password.");
             } else {
