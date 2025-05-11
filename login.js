@@ -49,10 +49,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const errorMessage = error.message;
         if (errorCode === "auth/invalid-credential") {
           if (password) {
-            alert("Wrong password");
-          } else {
-            alert("Email Not Registered");
-          }
+            alert("Wrong password or Email Not Registered");
+          } 
         } else {
           alert(errorMessage);
         }
