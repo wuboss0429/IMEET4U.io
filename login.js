@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-auth.js";
+import { getAuth, signInWithEmailAndPassword, fetchSignInMethodsForEmail } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyALscFG5EEzN5KanfiXzdw59nxh62z81OA",
@@ -38,8 +38,17 @@ document.addEventListener("DOMContentLoaded", () => {
       alert("Password must be at least 6 characters long.");
       return;
     }
-        
-    signInWithEmailAndPassword(auth, email, password)
+
+    // 檢查電子郵件是否已註冊
+    fetchSignInMethodsForEmail(auth, email)
+      .then((signInMethods) => {
+        if (signInMethods.length === 0) {
+          alert("Email Not Registered");
+          return;
+        }
+        // 如果已註冊，嘗試登入
+        return signInWithEmailAndPassword(auth, email, password);
+      })
       .then((userCredential) => {
         const user = userCredential.user;
         alert("login account.");
@@ -47,10 +56,8 @@ document.addEventListener("DOMContentLoaded", () => {
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        if (errorCode === "auth/invalid-credential") {
-          if (password) {
-            alert("Wrong password or Email Not Registered");
-          } 
+        if (errorCode === "auth/invalid-credential" || errorCode === "auth/wrong-password") {
+          alert("Wrong password.");
         } else {
           alert(errorMessage);
         }
