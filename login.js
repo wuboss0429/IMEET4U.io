@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
   form.addEventListener("submit", function (event) {
     event.preventDefault();
 
-    const email = document.getElementById('loginemail').value;
+    let email = document.getElementById('loginemail').value.trim().toLowerCase(); // 轉為小寫並移除空格
     const password = document.getElementById('loginpassword').value;
 
     if (!email || !password) {
@@ -41,6 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // 檢查電子郵件是否已註冊
     fetchSignInMethodsForEmail(auth, email)
       .then((signInMethods) => {
+        console.log("Sign-in methods:", signInMethods); // 診斷用
         if (signInMethods.length === 0) {
           alert("Email Not Registered");
           return Promise.reject(new Error("Email Not Registered"));
@@ -59,7 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
             } else {
               alert(errorMessage);
             }
-            throw error; // 確保錯誤繼續傳播
+            throw error;
           });
       })
       .catch((error) => {
