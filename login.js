@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, fetchSignInMethodsForEmail } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-auth.js";
+import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyALscFG5EEzN5KanfiXzdw59nxh62z81OA",
@@ -38,37 +38,22 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    console.log("Attempting login with email:", email); // 診斷用
-    fetchSignInMethodsForEmail(auth, email)
-      .then((signInMethods) => {
-        console.log("Sign-in methods:", signInMethods); // 診斷用
-        if (!signInMethods || signInMethods.length === 0) {
-          console.log("No sign-in methods found for email:", email); // 診斷用
-          alert("Email Not Registered");
-          return Promise.reject(new Error("Email Not Registered"));
-        }
-        console.log("Proceeding with sign-in for email:", email); // 診斷用
-        return signInWithEmailAndPassword(auth, email, password)
-          .then((userCredential) => {
-            const user = userCredential.user;
-            alert("login account.");
-          })
-          .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            console.log("Sign-in error:", error); // 診斷用
-            if (errorCode === "auth/invalid-credential" || errorCode === "auth/wrong-password") {
-              alert("Wrong password.");
-            } else {
-              alert(errorMessage);
-            }
-            throw error;
-          });
+    console.log("Attempting login with email:", email);
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        alert("login account.");
       })
       .catch((error) => {
-        if (error.message !== "Email Not Registered") {
-          console.error("Fetch sign-in methods error:", error);
-          alert("An error occurred. Please try again.");
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log("Sign-in error:", error);
+        if (errorCode === "auth/wrong-password" || errorCode === "auth/invalid-credential") {
+          alert("Wrong password.");
+        } else if (errorCode === "auth/user-not-found") {
+          alert("Email Not Registered");
+        } else {
+          alert(errorMessage);
         }
       });
   });
