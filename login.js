@@ -42,24 +42,29 @@ document.addEventListener("DOMContentLoaded", () => {
     fetchSignInMethodsForEmail(auth, email)
       .then((signInMethods) => {
         if (signInMethods.length === 0) {
-          throw new Error("Email Not Registered");
+          alert("Email Not Registered");
+          return Promise.reject(new Error("Email Not Registered"));
         }
         // 如果已註冊，嘗試登入
-        return signInWithEmailAndPassword(auth, email, password);
-      })
-      .then((userCredential) => {
-        const user = userCredential.user;
-        alert("login account.");
+        return signInWithEmailAndPassword(auth, email, password)
+          .then((userCredential) => {
+            const user = userCredential.user;
+            alert("login account.");
+          })
+          .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            if (errorCode === "auth/invalid-credential" || errorCode === "auth/wrong-password") {
+              alert("Wrong password.");
+            } else {
+              alert(errorMessage);
+            }
+            throw error; // 確保錯誤繼續傳播
+          });
       })
       .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        if (error.message === "Email Not Registered") {
-          alert("Email Not Registered");
-        } else if (errorCode === "auth/invalid-credential" || errorCode === "auth/wrong-password") {
-          alert("Wrong password.");
-        } else {
-          alert(errorMessage);
+        if (error.message !== "Email Not Registered") {
+          console.error("Unexpected error:", error);
         }
       });
   });
