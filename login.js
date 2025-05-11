@@ -29,7 +29,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const email = document.getElementById('loginemail').value;
     const password = document.getElementById('loginpassword').value;
 
-    //alert(5); // 測試事件是否觸發
     if (!email || !password) {
       alert("Please enter both email and password.");
       return;
@@ -43,8 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
     fetchSignInMethodsForEmail(auth, email)
       .then((signInMethods) => {
         if (signInMethods.length === 0) {
-          alert("Email Not Registered");
-          return;
+          throw new Error("Email Not Registered");
         }
         // 如果已註冊，嘗試登入
         return signInWithEmailAndPassword(auth, email, password);
@@ -56,7 +54,9 @@ document.addEventListener("DOMContentLoaded", () => {
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        if (errorCode === "auth/invalid-credential" || errorCode === "auth/wrong-password") {
+        if (error.message === "Email Not Registered") {
+          alert("Email Not Registered");
+        } else if (errorCode === "auth/invalid-credential" || errorCode === "auth/wrong-password") {
           alert("Wrong password.");
         } else {
           alert(errorMessage);
